@@ -1,0 +1,232 @@
+--// MM2 Trade Freeze Script (Ultra Believable Fake UI - ERROR MODE) - Zuri Edition
+if game.CoreGui:FindFirstChild("TradeFreezeUI") then game.CoreGui.TradeFreezeUI:Destroy() end
+
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local StarterGui = game:GetService("StarterGui")
+local LP = Players.LocalPlayer
+
+-- ScreenGui
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "TradeFreezeUI"
+ScreenGui.Parent = game.CoreGui
+ScreenGui.IgnoreGuiInset = true
+ScreenGui.ResetOnSpawn = false
+
+--------------------------------------------------------------------------------
+-- LOADING SCREEN (15s - More Realistic)
+--------------------------------------------------------------------------------
+local LoadingFrame = Instance.new("Frame", ScreenGui)
+LoadingFrame.Size = UDim2.new(0,340,0,240)
+LoadingFrame.Position = UDim2.new(0.5,0,0.5,0)
+LoadingFrame.AnchorPoint = Vector2.new(0.5,0.5)
+LoadingFrame.BackgroundColor3 = Color3.fromRGB(18,18,25)
+LoadingFrame.BorderSizePixel = 0
+Instance.new("UICorner", LoadingFrame).CornerRadius = UDim.new(0,16)
+
+-- Purple stroke for loading screen (solid)
+local LoadStroke = Instance.new("UIStroke", LoadingFrame)
+LoadStroke.Color = Color3.fromRGB(180,100,255)
+LoadStroke.Thickness = 3
+LoadStroke.Transparency = 0.3
+LoadStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+local LoadTitle = Instance.new("TextLabel", LoadingFrame)
+LoadTitle.Text = "MM2 Trade Freeze Premium"
+LoadTitle.Font = Enum.Font.GothamBlack
+LoadTitle.TextSize = 22
+LoadTitle.TextColor3 = Color3.fromRGB(240,240,255)
+LoadTitle.BackgroundTransparency = 1
+LoadTitle.Position = UDim2.new(0.5,0,0.25,0)
+LoadTitle.AnchorPoint = Vector2.new(0.5,0.5)
+
+local LoadSub = Instance.new("TextLabel", LoadingFrame)
+LoadSub.Text = "Bypassing Roblox anti-cheat..."
+LoadSub.Font = Enum.Font.Gotham
+LoadSub.TextSize = 15
+LoadSub.TextColor3 = Color3.fromRGB(180,180,200)
+LoadSub.BackgroundTransparency = 1
+LoadSub.Position = UDim2.new(0.5,0,0.42,0)
+LoadSub.AnchorPoint = Vector2.new(0.5,0.5)
+
+local fakeMsgs = {
+    "Hooking trade remotes...",
+    "Injecting freeze payload...",
+    "Loading auto-accept bypass...",
+    "Anti-detection activating...",
+    "Trade hooks injecting"
+}
+spawn(function()
+    local i = 1
+    while task.wait(2.2) do
+        LoadSub.Text = fakeMsgs[i]
+        i = (i % #fakeMsgs) + 1
+    end
+end)
+
+local BarBG = Instance.new("Frame", LoadingFrame)
+BarBG.Size = UDim2.new(0,260,0,10)
+BarBG.Position = UDim2.new(0.5,0,0.68,0)
+BarBG.AnchorPoint = Vector2.new(0.5,0.5)
+BarBG.BackgroundColor3 = Color3.fromRGB(35,35,45)
+Instance.new("UICorner", BarBG).CornerRadius = UDim.new(1,0)
+
+local BarFill = Instance.new("Frame", BarBG)
+BarFill.Size = UDim2.new(0,0,1,0)
+BarFill.BackgroundColor3 = Color3.fromRGB(180,100,255)
+Instance.new("UICorner", BarFill).CornerRadius = UDim.new(1,0)
+TweenService:Create(BarFill, TweenInfo.new(15, Enum.EasingStyle.Linear), {Size = UDim2.new(1,0,1,0)}):Play()
+
+task.wait(15)
+LoadingFrame:Destroy()
+
+--------------------------------------------------------------------------------
+-- MAIN UI
+--------------------------------------------------------------------------------
+local Main = Instance.new("Frame", ScreenGui)
+Main.Size = UDim2.new(0,300,0,240)
+Main.Position = UDim2.new(0.5,0,0.5,0)
+Main.AnchorPoint = Vector2.new(0.5,0.5)
+Main.BackgroundColor3 = Color3.fromRGB(18,18,25)
+Main.BorderSizePixel = 0
+Main.Active = true
+Main.Draggable = true
+Main.BackgroundTransparency = 0.15
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0,16)
+
+-- Solid purple border for main UI
+local Stroke = Instance.new("UIStroke", Main)
+Stroke.Color = Color3.fromRGB(180,100,255)
+Stroke.Thickness = 3
+Stroke.Transparency = 0.3
+Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+local TitleMain = Instance.new("TextLabel", Main)
+TitleMain.Text = "MM2 Trade Freeze Premium"
+TitleMain.Font = Enum.Font.GothamBlack
+TitleMain.TextSize = 20
+TitleMain.TextColor3 = Color3.fromRGB(240,240,255)
+TitleMain.Size = UDim2.new(1,0,0,35)
+TitleMain.BackgroundTransparency = 1
+
+local SubTitle = Instance.new("TextLabel", Main)
+SubTitle.Text = "Made By Zuri • v1.9 • Undetected"
+SubTitle.Font = Enum.Font.Gotham
+SubTitle.TextSize = 13
+SubTitle.TextColor3 = Color3.fromRGB(160,200,255)
+SubTitle.Size = UDim2.new(1,0,0,20)
+SubTitle.Position = UDim2.new(0,0,0,35)
+SubTitle.BackgroundTransparency = 1
+
+local function makeButton(text, yPos)
+    local b = Instance.new("TextButton", Main)
+    b.Size = UDim2.new(0.8,0,0,45)
+    b.Position = UDim2.new(0.1,0,yPos,0)
+    b.BackgroundColor3 = Color3.fromRGB(60,60,80)
+    b.Text = text
+    b.Font = Enum.Font.GothamSemibold
+    b.TextSize = 17
+    b.TextColor3 = Color3.fromRGB(255,255,255)
+    Instance.new("UICorner", b).CornerRadius = UDim.new(0,12)
+    return b
+end
+
+local FreezeBtn = makeButton("Freeze Trade", 0.28)
+local AutoBtn = makeButton("Auto Accept Trade", 0.55)
+
+-- Status text
+local StatusText = Instance.new("TextLabel", Main)
+StatusText.Size = UDim2.new(0.9,0,0.12,0)
+StatusText.Position = UDim2.new(0.05,0,0.78,0)
+StatusText.BackgroundTransparency = 1
+StatusText.Font = Enum.Font.Gotham
+StatusText.TextSize = 14
+StatusText.TextColor3 = Color3.fromRGB(180,100,255)
+StatusText.TextWrapped = true
+StatusText.Text = "https://discord.gg/JWBPjjhYh3"
+
+-- Loading bar container
+local LoadingContainer = Instance.new("Frame", Main)
+LoadingContainer.Size = UDim2.new(0.9,0,0.2,0)
+LoadingContainer.Position = UDim2.new(0.05,0,0.75,0)
+LoadingContainer.BackgroundTransparency = 1
+LoadingContainer.Visible = false
+
+local LoadText = Instance.new("TextLabel", LoadingContainer)
+LoadText.Size = UDim2.new(1,0,0.4,0)
+LoadText.BackgroundTransparency = 1
+LoadText.TextColor3 = Color3.fromRGB(200,200,255)
+LoadText.Font = Enum.Font.GothamBold
+LoadText.TextSize = 16
+LoadText.Text = "Processing..."
+
+local LoadBarBG = Instance.new("Frame", LoadingContainer)
+LoadBarBG.Size = UDim2.new(1,0,0.3,0)
+LoadBarBG.Position = UDim2.new(0,0,0.5,0)
+LoadBarBG.BackgroundColor3 = Color3.fromRGB(40,40,50)
+LoadBarBG.BorderSizePixel = 0
+Instance.new("UICorner", LoadBarBG).CornerRadius = UDim.new(1,0)
+
+local LoadBarFill = Instance.new("Frame", LoadBarBG)
+LoadBarFill.Size = UDim2.new(0,0,1,0)
+LoadBarFill.BackgroundColor3 = Color3.fromRGB(180,100,255)
+LoadBarFill.BorderSizePixel = 0
+Instance.new("UICorner", LoadBarFill).CornerRadius = UDim.new(1,0)
+
+--------------------------------------------------------------------------------
+-- FAKE BUTTON LOGIC - Now shows ERROR after loading
+--------------------------------------------------------------------------------
+local function showLoading(text, finalStatus, notifTitle, notifText, isError)
+    StatusText.Text = ""
+    LoadText.Text = text
+    LoadingContainer.Visible = true
+    LoadBarFill.Size = UDim2.new(0,0,1,0)
+    TweenService:Create(LoadBarFill, TweenInfo.new(10, Enum.EasingStyle.Linear), {Size = UDim2.new(1,0,1,0)}):Play()
+    
+    task.delay(10, function()
+        LoadingContainer.Visible = false
+        StatusText.Text = finalStatus
+        if isError then
+            StatusText.TextColor3 = Color3.fromRGB(255, 80, 80)  -- red for error
+        else
+            StatusText.TextColor3 = Color3.fromRGB(100,255,100)  -- green if success (not used now)
+        end
+        
+        StarterGui:SetCore("SendNotification", {
+            Title = notifTitle,
+            Text = notifText,
+            Duration = 6,
+            Icon = "rbxassetid://6031280885"  -- could change to warning icon if you want
+        })
+        
+        task.delay(8, function()
+            StatusText.Text = "https://discord.gg/JWBPjjhYh3"
+            StatusText.TextColor3 = Color3.fromRGB(180,255,180)
+        end)
+    end)
+end
+
+FreezeBtn.MouseButton1Click:Connect(function()
+    showLoading(
+        "Attempting trade freeze...",
+        "Failed - try sending a new trade request",
+        "Freeze Failed",
+        "Account ERROR, join Discord for assistance",
+        true  -- is error
+    )
+end)
+
+AutoBtn.MouseButton1Click:Connect(function()
+    showLoading(
+        "Attempting auto accept...",
+        "Failed - try sending a new trade request",
+        "Auto Accept Failed",
+        "Account ERROR, join Discord for assistance",
+        true
+    )
+end)
+
+-- Fade In
+TweenService:Create(Main, TweenInfo.new(1.2, Enum.EasingStyle.Quad), {BackgroundTransparency = 0.15}):Play()
+
+print("Enjoy Trade Freeze before it gets patched!!!")
